@@ -146,7 +146,7 @@
                                     "url": "https://raw.githubusercontent.com/kbiegert/terraform-ibm-cos/main/diagrams/ibm-arch-diagram.svg",
                                     "type": "image/svg+xml"
                                 },
-                                "description": "This is the Basic example."
+                                "description": "This is the Basic example"
                             }
                         ]
                     }
