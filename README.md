@@ -17,6 +17,8 @@ You can configure the following aspects of your instances:
 
 ## Usage
 
+
+
 ```hcl
 provider "ibm" {
   ibmcloud_api_key = "XXXXXXXXXX" # pragma: allowlist secret
