@@ -950,6 +950,135 @@
                             }
                         ]
                     }
+                },
+                {
+                    "label": "Buckets",
+                    "name": "buckets",
+                    "working_directory" : "modules/buckets",
+                    "usage_template": "module \"buckets\" {\n  source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source?archive=tgz&kind=terraform&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key = var.ibmcloud_api_key\n  region           = \"us-south\"\n  prefix           = \"test-cos\"\n  resource_tags    = var.resource_tags\n  resource_group   = var.resource_group\n  access_tags      = var.access_tags\n}\n\n",
+                    "terraform_version": "1.3",
+                    "licenses": [
+                        {
+                            "name": "ApacheTest",
+                            "url": "https://opensource.org/license/apache-2-0/"
+                        }
+                    ],
+                    "compliance": {
+                        "authority": "scc-v3",
+                        "profiles": [
+                            {
+                                "profile_name": "IBM Cloud for Financial Services",
+                                "profile_version": "1.4.0"
+                            }
+                        ]
+                    },
+                    "iam_permissions": [
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "cloud-object-storage"
+                        }
+                    ],
+                    "configuration": [
+                        {
+                            "custom_config": {},
+                            "default_value": "[]",
+                            "description": "Optional list of access tags to be added to the created resources",
+                            "hidden": false,
+                            "key": "access_tags",
+                            "required": false,
+                            "type": "array"
+                        },
+                        {
+                            "custom_config": {},
+                            "default_value": "",
+                            "description": "The IBM Cloud API Token",
+                            "hidden": false,
+                            "key": "ibmcloud_api_key",
+                            "required": true,
+                            "type": "password"
+                        },
+                        {
+                            "custom_config": {},
+                            "default_value": "test-cos",
+                            "description": "Prefix name for all related resources",
+                            "hidden": false,
+                            "key": "prefix",
+                            "required": false,
+                            "type": "string"
+                        },
+                        {
+                            "custom_config": {
+                                "config_constraints": {
+                                    "generationType": "2"
+                                },
+                                "grouping": "deployment",
+                                "original_grouping": "deployment",
+                                "type": "vpc_region"
+                            },
+                            "default_value": "us-south",
+                            "description": "Region where resources will be created",
+                            "display_name": "VPC region",
+                            "hidden": false,
+                            "key": "region",
+                            "required": false,
+                            "type": "string"
+                        },
+                        {
+                            "custom_config": {
+                                "config_constraints": {
+                                    "identifier": "rg_name"
+                                },
+                                "grouping": "deployment",
+                                "original_grouping": "deployment",
+                                "type": "resource_group"
+                            },
+                            "default_value": "",
+                            "description": "An existing resource group name to use for this example, if unset a new resource group will be created",
+                            "display_name": "Resource group",
+                            "hidden": false,
+                            "key": "resource_group",
+                            "required": false,
+                            "type": "string"
+                        },
+                        {
+                            "custom_config": {},
+                            "default_value": "[]",
+                            "description": "Optional list of tags to be added to created resources",
+                            "hidden": false,
+                            "key": "resource_tags",
+                            "required": false,
+                            "type": "array"
+                        }
+                    ],
+                    "architecture": {
+                        "descriptions": "",
+                        "features": [
+                            {
+                                "description": "Replication",
+                                "title": "Submodule"
+                            },
+                            {
+                                "description": "Yes",
+                                "title": "Creates COS"
+                            },
+                            {
+                                "description": "Yes",
+                                "title": "Creates buckets"
+                            }
+                        ],
+                        "diagrams": [
+                            {
+                                "diagram": {
+                                    "caption": "Submodule",
+                                    "url": "https://raw.githubusercontent.com/kbiegert/terraform-ibm-cos/main/diagrams/ibm-arch-diagram.svg",
+                                    "type": "image/svg+xml"
+                                },
+                                "description": "This is a submodule."
+                            }
+                        ]
+                    }
                 }
             ]
         }
