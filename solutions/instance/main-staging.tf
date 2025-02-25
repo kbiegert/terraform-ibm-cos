@@ -9,7 +9,7 @@ output "resource_group_id" {
 }
 
 output "resource_group_name" {
-    value       = resource_group_name
+    value       = "resource_group_name"
 }
 
 output "cos_instance_id" {
