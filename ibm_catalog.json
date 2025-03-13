@@ -1159,75 +1159,91 @@
                     },
                     "configuration": [
                         {
-                            "key": "ibmcloud_api_key"
+                        "key": "ibmcloud_api_key"
                         },
                         {
-                            "key": "resource_group_name"
+                        "key": "use_existing_resource_group",
+                        "required": true
                         },
                         {
-                            "key":"prefix",
-                            "required":true,
-                            "description": "Prefix to add to all resources created by this solution. To not use any prefix value, you can enter the string `__NULL__`."
+                        "key": "resource_group_name",
+                        "required": true
                         },
                         {
-                            "key": "existing_resource_group"
+                        "key":"prefix",
+                        "required": true,
+                        "description": "Prefix to add to all resources created by this solution. To not use any prefix value, you can enter the string `__NULL__`."
                         },
                         {
-                            "key": "cos_instance_name"
+                        "key": "provider_visibility",
+                        "options": [
+                            {
+                            "displayname": "private",
+                            "value": "private"
+                            },
+                            {
+                            "displayname": "public",
+                            "value": "public"
+                            },
+                            {
+                            "displayname": "public-and-private",
+                            "value": "public-and-private"
+                            }
+                        ]
                         },
                         {
-                            "key": "cos_plan"
+                        "key": "cos_instance_name"
                         },
                         {
-                            "key": "access_tags"
+                        "key": "cos_plan"
                         },
                         {
-                            "key": "cos_tags"
+                        "key": "cos_tags",
+                        "custom_config": {
+                            "grouping": "deployment",
+                            "original_grouping": "deployment",
+                            "config_constraints": {
+                            "type": "string"
+                            }
+                        }
                         },
                         {
-                            "key": "instance_cbr_rules"
+                        "key": "access_tags",
+                        "custom_config": {
+                            "grouping": "deployment",
+                            "original_grouping": "deployment",
+                            "config_constraints": {
+                            "type": "string"
+                            }
+                        }
                         },
                         {
-                            "key": "resource_keys"
+                        "key": "resource_keys"
                         },
                         {
-                            "key": "existing_secrets_manager_instance_crn"
+                        "key": "existing_secrets_manager_instance_crn"
                         },
                         {
-                            "key": "existing_secrets_manager_endpoint_type",
-                            "options": [
-                                {
-                                    "displayname": "private",
-                                    "value": "private"
-                                },
-                                {
-                                    "displayname": "public",
-                                    "value": "public"
-                                }
-                            ]
+                        "key": "existing_secrets_manager_endpoint_type",
+                        "options": [
+                            {
+                            "displayname": "private",
+                            "value": "private"
+                            },
+                            {
+                            "displayname": "public",
+                            "value": "public"
+                            }
+                        ]
                         },
                         {
-                            "key": "service_credential_secrets"
+                        "key": "service_credential_secrets"
                         },
                         {
-                            "key": "skip_cos_sm_auth_policy"
+                        "key": "skip_secrets_manager_cos_iam_auth_policy"
                         },
                         {
-                            "key": "provider_visibility",
-                            "options": [
-                                {
-                                    "displayname": "private",
-                                    "value": "private"
-                                },
-                                {
-                                    "displayname": "public",
-                                    "value": "public"
-                                },
-                                {
-                                    "displayname": "public-and-private",
-                                    "value": "public-and-private"
-                                }
-                            ]
+                        "key": "cos_instance_cbr_rules"
                         }
                     ]
                 }

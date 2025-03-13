@@ -6,11 +6,11 @@ variable "ibmcloud_api_key" {
 
 variable "prefix" {
     type        = string
-    description = "(Optional) Prefix to add to all resources created by this solution. To not use any prefix value, you can set this value to `null` or an empty string."
+    description = "The prefix to add to all resources that this solution creates. To not use any prefix value, you can set this value to `null` or an empty string."
     default     = "dev"
 }
 
-variable "existing_resource_group" {
+variable "use_existing_resource_group" {
     type        = bool
     description = "Whether to use an existing resource group."
     default     = false
@@ -24,10 +24,10 @@ variable "resource_group_name" {
 variable "resource_keys" {
     description = "The definition of the resource keys to generate. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-cos/tree/main/solutions/instance/DA-types.md#resource-keys)."
     type = list(object({
-        name                      = string
-        generate_hmac_credentials = optional(bool, false)
-        role                      = optional(string, "Reader")
-        service_id_crn            = optional(string, null)
+    name                      = string
+    generate_hmac_credentials = optional(bool, false)
+    role                      = optional(string, "Reader")
+    service_id_crn            = optional(string, null)
     }))
     default = []
 }
@@ -67,14 +67,18 @@ variable "existing_secrets_manager_endpoint_type" {
     type        = string
     description = "The endpoint type to use if `existing_secrets_manager_instance_crn` is specified. Possible values: public, private."
     default     = "private"
+    validation {
+    condition     = contains(["public", "private"], var.existing_secrets_manager_endpoint_type)
+    error_message = "Only \"public\" and \"private\" are allowed values for 'existing_secrets_endpoint_type'."
+    }
 }
 
 variable "service_credential_secrets" {
     type = list(object({
-        secret_group_name        = string
-        secret_group_description = optional(string)
-        existing_secret_group    = optional(bool)
-        service_credentials = list(object({
+    secret_group_name        = string
+    secret_group_description = optional(string)
+    existing_secret_group    = optional(bool)
+    service_credentials = list(object({
         secret_name                                 = string
         service_credentials_source_service_role_crn = string
         secret_labels                               = optional(list(string))
@@ -89,10 +93,19 @@ variable "service_credential_secrets" {
     default     = []
     description = "Service credential secrets configuration for COS. [Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-cos/tree/main/solutions/instance/DA-types.md#service-credential-secrets)."
 
-    
+    validation {
+    # Service roles CRNs can be found at https://cloud.ibm.com/iam/roles, select Cloud Object Storage and select the role
+    condition = alltrue([
+        for group in var.service_credential_secrets : alltrue([
+        # crn:v?:bluemix; two non-empty segments; three possibly empty segments; :serviceRole or role: non-empty segment
+        for credential in group.service_credentials : can(regex("^crn:v[0-9]:bluemix(:..*){2}(:.*){3}:(serviceRole|role):..*$", credential.service_credentials_source_service_role_crn))
+        ])
+    ])
+    error_message = "service_credentials_source_service_role_crn must be a serviceRole CRN. See https://cloud.ibm.com/iam/roles"
+    }
 }
 
-variable "skip_cos_sm_auth_policy" {
+variable "skip_secrets_manager_cos_iam_auth_policy" {
     type        = bool
     default     = false
     description = "Whether an IAM authorization policy is created for Secrets Manager instance to create a service credential secrets for Cloud Object Storage. Set to `true` to use an existing policy."
@@ -101,29 +114,34 @@ variable "provider_visibility" {
     description = "Set the visibility value for the IBM terraform provider. Supported values are `public`, `private`, `public-and-private`. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/guides/custom-service-endpoints)."
     type        = string
     default     = "private"
+
+    validation {
+        condition     = contains(["public", "private", "public-and-private"], var.provider_visibility)
+        error_message = "Invalid visibility option. Allowed values are 'public', 'private', or 'public-and-private'."
+    }
 }
 
 ##############################################################
 # Context-based restriction (CBR)
 ##############################################################
-variable "instance_cbr_rules" {
+variable "cos_instance_cbr_rules" {
     type = list(object({
-        description = string
-        account_id  = string
-        rule_contexts = list(object({
+    description = string
+    account_id  = string
+    rule_contexts = list(object({
         attributes = optional(list(object({
-            name  = string
-            value = string
-        }))) }))
-        enforcement_mode = string
-        tags = optional(list(object({
         name  = string
         value = string
-        })), [])
-        operations = optional(list(object({
+    }))) }))
+    enforcement_mode = string
+    tags = optional(list(object({
+        name  = string
+        value = string
+    })), [])
+    operations = optional(list(object({
         api_types = list(object({
-            api_type_id = string
-        }))
+        api_type_id = string
+            }))
         })))
     }))
     description = "The list of context-based restriction rules to create for the instance.[Learn more](https://github.com/terraform-ibm-modules/terraform-ibm-cos/blob/main/solutions/instance/DA-cbr_rules.md)"
